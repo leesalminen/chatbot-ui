@@ -17,6 +17,7 @@ interface Props {
   lightMode: 'light' | 'dark';
   selectedConversation: Conversation;
   apiKey: string;
+  lnbitsKey: string;
   serverSideApiKeyIsSet: boolean;
   pluginKeys: PluginKey[];
   serverSidePluginKeysSet: boolean;
@@ -33,6 +34,7 @@ interface Props {
     data: KeyValuePair,
   ) => void;
   onApiKeyChange: (apiKey: string) => void;
+  onLnbitsKeyChange: (lnbitsKey: string) => void;
   onClearConversations: () => void;
   onExportConversations: () => void;
   onImportConversations: (data: SupportedExportFormats) => void;
@@ -46,6 +48,7 @@ export const Chatbar: FC<Props> = ({
   lightMode,
   selectedConversation,
   apiKey,
+  lnbitsKey,
   serverSideApiKeyIsSet,
   pluginKeys,
   serverSidePluginKeysSet,
@@ -59,6 +62,7 @@ export const Chatbar: FC<Props> = ({
   onDeleteConversation,
   onUpdateConversation,
   onApiKeyChange,
+  onLnbitsKeyChange,
   onClearConversations,
   onExportConversations,
   onImportConversations,
@@ -202,12 +206,14 @@ export const Chatbar: FC<Props> = ({
       <ChatbarSettings
         lightMode={lightMode}
         apiKey={apiKey}
+        lnbitsKey={lnbitsKey}
         serverSideApiKeyIsSet={serverSideApiKeyIsSet}
         pluginKeys={pluginKeys}
         serverSidePluginKeysSet={serverSidePluginKeysSet}
         conversationsCount={conversations.length}
         onToggleLightMode={onToggleLightMode}
         onApiKeyChange={onApiKeyChange}
+        onLnbitsKeyChange={onLnbitsKeyChange}
         onClearConversations={onClearConversations}
         onExportConversations={onExportConversations}
         onImportConversations={onImportConversations}

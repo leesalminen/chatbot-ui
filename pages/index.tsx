@@ -2,6 +2,7 @@ import { Chat } from '@/components/Chat/Chat';
 import { Chatbar } from '@/components/Chatbar/Chatbar';
 import { Navbar } from '@/components/Mobile/Navbar';
 import { Promptbar } from '@/components/Promptbar/Promptbar';
+import { LnbitsKey } from '@/components/Chatbar/LnbitsKey';
 import { ChatBody, Conversation, Message } from '@/types/chat';
 import { KeyValuePair } from '@/types/data';
 import { ErrorMessage } from '@/types/error';
@@ -20,7 +21,7 @@ import {
   cleanConversationHistory,
   cleanSelectedConversation,
 } from '@/utils/app/clean';
-import { DEFAULT_SYSTEM_PROMPT } from '@/utils/app/const';
+import { DEFAULT_SYSTEM_PROMPT, LNBITS_API_HOST } from '@/utils/app/const';
 import {
   saveConversation,
   saveConversations,
@@ -37,6 +38,7 @@ import Head from 'next/head';
 import { useEffect, useRef, useState } from 'react';
 import toast from 'react-hot-toast';
 import { v4 as uuidv4 } from 'uuid';
+import { usePrevious } from '@/utils/app/usePrevious'
 
 interface HomeProps {
   serverSideApiKeyIsSet: boolean;
@@ -75,9 +77,12 @@ const Home: React.FC<HomeProps> = ({
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [showPromptbar, setShowPromptbar] = useState<boolean>(true);
 
+  const [lnbitsKey, setLnbitsKey] = useState<object>({});
+
   // REFS ----------------------------------------------
 
   const stopConversationRef = useRef<boolean>(false);
+  const previousLnbitsKey = usePrevious(lnbitsKey);
 
   // FETCH RESPONSE ----------------------------------------------
 
@@ -114,6 +119,7 @@ const Home: React.FC<HomeProps> = ({
         model: updatedConversation.model,
         messages: updatedConversation.messages,
         key: apiKey,
+        lnbitsKey: lnbitsKey.wallets[0].adminkey,
         prompt: updatedConversation.prompt,
       };
 
@@ -147,7 +153,20 @@ const Home: React.FC<HomeProps> = ({
       if (!response.ok) {
         setLoading(false);
         setMessageIsStreaming(false);
-        toast.error(response.statusText);
+        
+
+        if(response.status === 402) {
+          toast.error(
+            <span>
+              {response.statusText}
+              <br />
+              <a href={`${LNBITS_API_HOST}/wallet?usr=${lnbitsKey.id}&wal=${lnbitsKey.wallets[0].id}`} target="_blank">Click here to reload your wallet</a>
+            </span>
+          )
+        } else {
+          toast.error(response.statusText);
+        }
+
         return;
       }
 
@@ -343,6 +362,11 @@ const Home: React.FC<HomeProps> = ({
   const handleApiKeyChange = (apiKey: string) => {
     setApiKey(apiKey);
     localStorage.setItem('apiKey', apiKey);
+  };
+
+  const handleLnbitsKeyChange = (data: object) => {
+    setLnbitsKey(data);
+    localStorage.setItem('lnbitsKey', JSON.stringify(data));
   };
 
   const handlePluginKeyChange = (pluginKey: PluginKey) => {
@@ -652,6 +676,22 @@ const Home: React.FC<HomeProps> = ({
     }
   }, [apiKey]);
 
+  useEffect(() => {
+    if(lnbitsKey.id && previousLnbitsKey.id !== lnbitsKey.id) {
+      toast.success(
+        <span>
+          LNBits Wallet Linked!
+          <br />
+          <a href={`${LNBITS_API_HOST}/wallet?usr=${lnbitsKey.id}&wal=${lnbitsKey.wallets[0].id}`} target="_blank">Click here to reload your wallet</a>
+        </span>
+      )
+    }
+
+    if(previousLnbitsKey && previousLnbitsKey.id && !lnbitsKey.id) {
+      toast.success("You are logged out!")
+    }
+  }, [lnbitsKey])
+
   // ON LOAD --------------------------------------------
 
   useEffect(() => {
@@ -668,6 +708,11 @@ const Home: React.FC<HomeProps> = ({
     } else if (apiKey) {
       setApiKey(apiKey);
       fetchModels(apiKey);
+    }
+
+    const lnbitsKey = localStorage.getItem('lnbitsKey');
+    if (lnbitsKey) {
+      setLnbitsKey(JSON.parse(lnbitsKey));
     }
 
     const pluginKeys = localStorage.getItem('pluginKeys');
@@ -732,6 +777,32 @@ const Home: React.FC<HomeProps> = ({
     }
   }, [serverSideApiKeyIsSet]);
 
+  if(!lnbitsKey.id) {
+    return (
+      <>
+        <Head>
+          <title>Chatbot UI</title>
+          <meta name="description" content="ChatGPT but better." />
+          <meta
+            name="viewport"
+            content="height=device-height ,width=device-width, initial-scale=1, user-scalable=no"
+          />
+          <link rel="icon" href="/favicon.ico" />
+        </Head>
+        <main
+          className={`flex flex-col justify-center items-center h-screen text-white dark:text-white ${lightMode}`}
+        >
+          <h1 className="text-3xl font-bold">Log In</h1>
+          <p>This AI uses Bitcoin on Lightning Network to bill for usage. You can do this by connecting your LNBits wallet to this app.</p>
+
+          <LnbitsKey 
+            lnbitsKey={lnbitsKey}
+            onLnbitsKeyChange={handleLnbitsKeyChange} />
+        </main>
+      </>
+    )
+  }
+
   return (
     <>
       <Head>
@@ -763,6 +834,7 @@ const Home: React.FC<HomeProps> = ({
                   lightMode={lightMode}
                   selectedConversation={selectedConversation}
                   apiKey={apiKey}
+                  lnbitsKey={lnbitsKey}
                   serverSideApiKeyIsSet={serverSideApiKeyIsSet}
                   pluginKeys={pluginKeys}
                   serverSidePluginKeysSet={serverSidePluginKeysSet}
@@ -776,6 +848,7 @@ const Home: React.FC<HomeProps> = ({
                   onDeleteConversation={handleDeleteConversation}
                   onUpdateConversation={handleUpdateConversation}
                   onApiKeyChange={handleApiKeyChange}
+                  onLnbitsKeyChange={handleLnbitsKeyChange}
                   onClearConversations={handleClearConversations}
                   onExportConversations={handleExportData}
                   onImportConversations={handleImportConversations}

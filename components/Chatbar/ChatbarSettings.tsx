@@ -12,12 +12,14 @@ import { PluginKeys } from './PluginKeys';
 interface Props {
   lightMode: 'light' | 'dark';
   apiKey: string;
+  lnbitsKey: string;
   serverSideApiKeyIsSet: boolean;
   pluginKeys: PluginKey[];
   serverSidePluginKeysSet: boolean;
   conversationsCount: number;
   onToggleLightMode: (mode: 'light' | 'dark') => void;
   onApiKeyChange: (apiKey: string) => void;
+  onLnbitsKeyChange: (lnbitsKey: string) => void;
   onClearConversations: () => void;
   onExportConversations: () => void;
   onImportConversations: (data: SupportedExportFormats) => void;
@@ -28,12 +30,14 @@ interface Props {
 export const ChatbarSettings: FC<Props> = ({
   lightMode,
   apiKey,
+  lnbitsKey,
   serverSideApiKeyIsSet,
   pluginKeys,
   serverSidePluginKeysSet,
   conversationsCount,
   onToggleLightMode,
   onApiKeyChange,
+  onLnbitsKeyChange,
   onClearConversations,
   onExportConversations,
   onImportConversations,
@@ -75,6 +79,8 @@ export const ChatbarSettings: FC<Props> = ({
           pluginKeys={pluginKeys}
           onPluginKeyChange={onPluginKeyChange}
           onClearPluginKey={onClearPluginKey}
+          onLnbitsKeyChange={onLnbitsKeyChange}
+          lnbitsKey={lnbitsKey}
         />
       ) : null}
     </div>

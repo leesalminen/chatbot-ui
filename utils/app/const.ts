@@ -3,3 +3,12 @@ export const DEFAULT_SYSTEM_PROMPT =
 
 export const OPENAI_API_HOST =
   process.env.OPENAI_API_HOST || 'https://api.openai.com';
+
+export const LNBITS_API_HOST =
+  process.env.LNBITS_API_HOST || 'https://legend.lnbits.com'
+
+export const SATS_PER_TOKEN = 
+  process.env.SATS_PER_TOKEN || 0.5
+
+export const PAYMENT_RECIPIENT_LN_ADDRESS = 
+  process.env.PAYMENT_RECIPIENT_LN_ADDRESS || 'lee2@pay.bitcoinjungle.app'

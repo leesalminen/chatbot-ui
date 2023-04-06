@@ -6,6 +6,8 @@ import {
   ReconnectInterval,
 } from 'eventsource-parser';
 import { OPENAI_API_HOST } from '../app/const';
+import { countTokens } from '@/utils/server/tokens'
+import { billUsage } from '@/utils/server/lnbits'
 
 export class OpenAIError extends Error {
   type: string;
@@ -25,6 +27,7 @@ export const OpenAIStream = async (
   model: OpenAIModel,
   systemPrompt: string,
   key: string,
+  lnbitsKey: string,
   messages: Message[],
 ) => {
   const res = await fetch(`${OPENAI_API_HOST}/v1/chat/completions`, {
@@ -74,11 +77,20 @@ export const OpenAIStream = async (
 
   const stream = new ReadableStream({
     async start(controller) {
-      const onParse = (event: ParsedEvent | ReconnectInterval) => {
+      let responseText
+      const onParse = async (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
           const data = event.data;
 
           if (data === '[DONE]') {
+            const tokenCount = await countTokens(responseText)
+            
+            try {
+              const billed = await billUsage(lnbitsKey, tokenCount, 'output')
+            } catch(e) {
+              console.warn('OUTPUT BILLING ERROR', e.message)
+            }
+            
             controller.close();
             return;
           }
@@ -86,6 +98,7 @@ export const OpenAIStream = async (
           try {
             const json = JSON.parse(data);
             const text = json.choices[0].delta.content;
+            responseText += text
             const queue = encoder.encode(text);
             controller.enqueue(queue);
           } catch (e) {
