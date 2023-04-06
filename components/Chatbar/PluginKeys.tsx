@@ -9,8 +9,8 @@ interface Props {
   pluginKeys: PluginKey[];
   onPluginKeyChange: (pluginKey: PluginKey) => void;
   onClearPluginKey: (pluginKey: PluginKey) => void;
-  onLnbitsKeyChange: (lnbitsKey: string) => void;
-  lnbitsKey: string;
+  onLnbitsKeyChange: (lnbitsKey: any) => void;
+  lnbitsKey: any;
 }
 
 export const PluginKeys: FC<Props> = ({

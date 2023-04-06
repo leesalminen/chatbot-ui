@@ -77,7 +77,7 @@ export const OpenAIStream = async (
 
   const stream = new ReadableStream({
     async start(controller) {
-      let responseText
+      let responseText: any
       const onParse = async (event: ParsedEvent | ReconnectInterval) => {
         if (event.type === 'event') {
           const data = event.data;
@@ -87,7 +87,7 @@ export const OpenAIStream = async (
             
             try {
               const billed = await billUsage(lnbitsKey, tokenCount, 'output')
-            } catch(e) {
+            } catch(e: any) {
               console.warn('OUTPUT BILLING ERROR', e.message)
             }
             

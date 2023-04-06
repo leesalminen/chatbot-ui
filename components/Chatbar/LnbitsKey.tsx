@@ -1,9 +1,9 @@
-import { FC, useState } from 'react'
+import { FC, useState, KeyboardEvent } from 'react'
 import { LNBITS_API_HOST } from '@/utils/app/const'
 
 interface Props {
   onLnbitsKeyChange: (data: object) => void;
-  lnbitsKey: object;
+  lnbitsKey: any;
 }
 
 export const LnbitsKey: FC<Props> = ({
@@ -45,7 +45,7 @@ export const LnbitsKey: FC<Props> = ({
       <div className="text-xl font-bold">LNBits Billing Plugin</div>
       <div className="mt-4 italic">
         {loading &&
-          <span>We're generating a new wallet for you now, please wait...</span>
+          <span>We&apos;re generating a new wallet for you now, please wait...</span>
         }
 
         {!loading &&

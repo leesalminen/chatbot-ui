@@ -77,7 +77,7 @@ const Home: React.FC<HomeProps> = ({
   const [prompts, setPrompts] = useState<Prompt[]>([]);
   const [showPromptbar, setShowPromptbar] = useState<boolean>(true);
 
-  const [lnbitsKey, setLnbitsKey] = useState<object>({});
+  const [lnbitsKey, setLnbitsKey] = useState<any>({});
 
   // REFS ----------------------------------------------
 
@@ -364,7 +364,7 @@ const Home: React.FC<HomeProps> = ({
     localStorage.setItem('apiKey', apiKey);
   };
 
-  const handleLnbitsKeyChange = (data: object) => {
+  const handleLnbitsKeyChange = (data: any) => {
     setLnbitsKey(data);
     localStorage.setItem('lnbitsKey', JSON.stringify(data));
   };
@@ -677,7 +677,7 @@ const Home: React.FC<HomeProps> = ({
   }, [apiKey]);
 
   useEffect(() => {
-    if(lnbitsKey.id && previousLnbitsKey.id !== lnbitsKey.id) {
+    if(lnbitsKey.id && previousLnbitsKey && previousLnbitsKey.id !== lnbitsKey.id) {
       toast.success(
         <span>
           LNBits Wallet Linked!

@@ -12,7 +12,7 @@ export const billUsage = async (
   tokenCount: number,
   type: string
 ) => {
-  const satsToBill = Math.round(tokenCount * SATS_PER_TOKEN)
+  const satsToBill = Math.round(tokenCount * parseFloat(SATS_PER_TOKEN))
 
   const message = `AI Usage: ${tokenCount} tokens (${SATS_PER_TOKEN} sats per token) for ${type}`
   console.log(message)

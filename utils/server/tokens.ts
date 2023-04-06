@@ -8,7 +8,7 @@ export const config = {
 };
 
 
-export const countTokens = async (text) => {
+export const countTokens = async (text: string): Promise<number> => {
 	await init((imports) => WebAssembly.instantiate(wasm, imports));
     const encoding = new Tiktoken(
       tiktokenModel.bpe_ranks,
