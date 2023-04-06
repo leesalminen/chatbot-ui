@@ -5,7 +5,7 @@ export const OPENAI_API_HOST =
   process.env.OPENAI_API_HOST || 'https://api.openai.com';
 
 export const LNBITS_API_HOST =
-  process.env.LNBITS_API_HOST || 'https://legend.lnbits.com'
+  process.env.NEXT_PUBLIC_LNBITS_API_HOST || 'https://legend.lnbits.com'
 
 export const SATS_PER_TOKEN = 
   process.env.SATS_PER_TOKEN || "0.5"
