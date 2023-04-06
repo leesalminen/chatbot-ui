@@ -5,7 +5,8 @@ import { OpenAIModel, OpenAIModelID } from '@/types/openai';
 import { Plugin } from '@/types/plugin';
 import { Prompt } from '@/types/prompt';
 import { throttle } from '@/utils';
-import { IconArrowDown, IconClearAll, IconSettings } from '@tabler/icons-react';
+import { LNBITS_API_HOST } from '@/utils/app/const'
+import { IconArrowDown, IconClearAll, IconSettings, IconWallet } from '@tabler/icons-react';
 import { useTranslation } from 'next-i18next';
 import {
   FC,
@@ -28,6 +29,7 @@ interface Props {
   conversation: Conversation;
   models: OpenAIModel[];
   apiKey: string;
+  lnbitsKey: any;
   serverSideApiKeyIsSet: boolean;
   defaultModelId: OpenAIModelID;
   messageIsStreaming: boolean;
@@ -52,6 +54,7 @@ export const Chat: FC<Props> = memo(
     conversation,
     models,
     apiKey,
+    lnbitsKey,
     serverSideApiKeyIsSet,
     defaultModelId,
     messageIsStreaming,
@@ -240,6 +243,16 @@ export const Chat: FC<Props> = memo(
                             })
                           }
                         />
+
+                        <button
+                          className="mt-6 w-full rounded-lg border border-neutral-500 px-4 py-2 text-neutral-900 shadow hover:bg-neutral-100 focus:outline-none dark:border-neutral-800 dark:border-opacity-50 dark:bg-white dark:text-black dark:hover:bg-neutral-300"
+                          onClick={() => {
+                            window.open(`${LNBITS_API_HOST}/wallet?usr=${lnbitsKey.id}&wal=${lnbitsKey.wallets[0].id}`, '_blank')
+                          }}
+                        >
+                          <IconWallet size={18} style={{display: "inline"}} />
+                          <span style={{verticalAlign: "middle"}}>Reload Your Wallet</span>
+                        </button>
                       </div>
                     )}
                   </div>

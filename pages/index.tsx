@@ -162,7 +162,7 @@ const Home: React.FC<HomeProps> = ({
               <br />
               <a href={`${LNBITS_API_HOST}/wallet?usr=${lnbitsKey.id}&wal=${lnbitsKey.wallets[0].id}`} target="_blank">Click here to reload your wallet</a>
             </span>
-          )
+          , {duration: 10000})
         } else {
           toast.error(response.statusText);
         }
@@ -684,7 +684,7 @@ const Home: React.FC<HomeProps> = ({
           <br />
           <a href={`${LNBITS_API_HOST}/wallet?usr=${lnbitsKey.id}&wal=${lnbitsKey.wallets[0].id}`} target="_blank">Click here to reload your wallet</a>
         </span>
-      )
+      , {duration: 10000})
     }
 
     if(previousLnbitsKey && previousLnbitsKey.id && !lnbitsKey.id) {
@@ -881,6 +881,7 @@ const Home: React.FC<HomeProps> = ({
                 conversation={selectedConversation}
                 messageIsStreaming={messageIsStreaming}
                 apiKey={apiKey}
+                lnbitsKey={lnbitsKey}
                 serverSideApiKeyIsSet={serverSideApiKeyIsSet}
                 defaultModelId={defaultModelId}
                 modelError={modelError}
