@@ -139,7 +139,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const answer = choices2[0].message.content;
 
     try {
-      const billedOutput = await billUsage(lnbitsKey, usage.completion_tokens, 'output')
+      const billedOutput = await billUsage(lnbitsKey, usage.total_tokens - 100, 'output')
     } catch(e: any) {
       console.warn('OUTPUT BILLING ERROR', e.message)
     }
