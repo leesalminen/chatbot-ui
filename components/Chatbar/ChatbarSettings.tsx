@@ -74,15 +74,13 @@ export const ChatbarSettings: FC<Props> = ({
         <Key apiKey={apiKey} onApiKeyChange={onApiKeyChange} />
       ) : null}
 
-      {!(serverSidePluginKeysSet) ? (
-        <PluginKeys
-          pluginKeys={pluginKeys}
-          onPluginKeyChange={onPluginKeyChange}
-          onClearPluginKey={onClearPluginKey}
-          onLnbitsKeyChange={onLnbitsKeyChange}
-          lnbitsKey={lnbitsKey}
-        />
-      ) : null}
+      <PluginKeys
+        pluginKeys={pluginKeys}
+        onPluginKeyChange={onPluginKeyChange}
+        onClearPluginKey={onClearPluginKey}
+        onLnbitsKeyChange={onLnbitsKeyChange}
+        lnbitsKey={lnbitsKey}
+      />
     </div>
   );
 };

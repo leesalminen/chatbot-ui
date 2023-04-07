@@ -49,7 +49,7 @@ export const LnbitsKey: FC<Props> = ({
         }
 
         {!loading &&
-          <span>Please link a LNBits Wallet to enable billing.</span>
+          <span>Please click the button to create a new LNBits Wallet and enable billing.</span>
         }
       </div>
 
