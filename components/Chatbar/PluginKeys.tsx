@@ -80,6 +80,10 @@ export const PluginKeys: FC<Props> = ({
               >
                 <div className="mb-10 text-4xl">Plugin Keys</div>
 
+                <LnbitsKey
+                  lnbitsKey={lnbitsKey}
+                  onLnbitsKeyChange={onLnbitsKeyChange} />
+
                 <div className="mt-6 rounded border p-4">
                   <div className="text-xl font-bold">Google Search Plugin</div>
                   <div className="mt-4 italic">
@@ -220,10 +224,6 @@ export const PluginKeys: FC<Props> = ({
                     Clear Google Search Plugin Keys
                   </button>
                 </div>
-
-                <LnbitsKey
-                  lnbitsKey={lnbitsKey}
-                  onLnbitsKeyChange={onLnbitsKeyChange} />
 
                 <button
                   type="button"
