@@ -149,7 +149,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     if (error instanceof BillingError) {
       return res.status(402).send(error.message)
     } else {
-      return res.status(500).send()
+      return res.status(500)
     }
   }
 };
