@@ -5,6 +5,10 @@ const nextConfig = {
   i18n,
   reactStrictMode: true,
 
+  env: {
+    NEXT_PUBLIC_LNBITS_API_HOST: "https://lnbits.bitcoinjungle.app"
+  },
+
   webpack(config, { isServer, dev }) {
     config.experiments = {
       asyncWebAssembly: true,

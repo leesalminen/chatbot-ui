@@ -6,10 +6,11 @@ import { Readability } from '@mozilla/readability';
 import endent from 'endent';
 import jsdom, { JSDOM } from 'jsdom';
 import { NextApiRequest, NextApiResponse } from 'next';
+import { billUsage, BillingError } from '@/utils/server/lnbits'
 
 const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
   try {
-    const { messages, key, model, googleAPIKey, googleCSEId } =
+    const { messages, key, model, googleAPIKey, lnbitsKey, googleCSEId } =
       req.body as GoogleBody;
 
     const userMessage = messages[messages.length - 1];
@@ -108,6 +109,8 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
 
     const answerMessage: Message = { role: 'user', content: answerPrompt };
 
+    const billed = await billUsage(lnbitsKey, 100, 'input')
+
     const answerRes = await fetch(`${OPENAI_API_HOST}/v1/chat/completions`, {
       headers: {
         'Content-Type': 'application/json',
@@ -132,12 +135,22 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
       }),
     });
 
-    const { choices: choices2 } = await answerRes.json();
+    const { choices: choices2, usage } = await answerRes.json();
     const answer = choices2[0].message.content;
 
-    res.status(200).json({ answer });
+    try {
+      const billedOutput = await billUsage(lnbitsKey, usage.completion_tokens, 'output')
+    } catch(e: any) {
+      console.warn('OUTPUT BILLING ERROR', e.message)
+    }
+
+    return res.status(200).json({ answer });
   } catch (error) {
-    return new Response('Error', { status: 500 });
+    if (error instanceof BillingError) {
+      return res.status(402).send(error.message)
+    } else {
+      return res.status(500).send()
+    }
   }
 };
 

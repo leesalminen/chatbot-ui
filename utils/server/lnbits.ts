@@ -12,16 +12,16 @@ export const billUsage = async (
   tokenCount: number,
   type: string
 ) => {
-  let satsToBill = Math.round(tokenCount * parseFloat(SATS_PER_TOKEN))
-
-  if(satsToBill < 1) {
-    satsToBill = 1
-  }
-
   const message = `AI Usage: ${tokenCount} tokens (${SATS_PER_TOKEN} sats per token) for ${type}`
   console.log(message)
 
   try {
+    let satsToBill = Math.round(tokenCount * parseFloat(SATS_PER_TOKEN))
+
+    if(satsToBill < 1) {
+      satsToBill = 1
+    }
+
     const addressParts = PAYMENT_RECIPIENT_LN_ADDRESS.split('@')
 
     if(!addressParts || addressParts.length !== 2) {
@@ -66,7 +66,7 @@ export const billUsage = async (
     });
 
     if (walletResponse.status !== 201) {
-      throw new Error("Status code error")
+      throw new Error(`Status code error: ${walletResponse.status}`)
     }
 
     const data = await walletResponse.json()
@@ -78,6 +78,6 @@ export const billUsage = async (
     return data
   } catch (error) {
     console.error(error);
-    throw new BillingError(`Unable to bill ${satsToBill} sats from your LNBits Wallet.`)
+    throw new BillingError(`Unable to bill ${tokenCount} tokens from your LNBits Wallet.`)
   }
 };
