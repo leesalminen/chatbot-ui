@@ -322,9 +322,9 @@ export const Chat: FC<Props> = memo(
                 setCurrentMessage(message);
                 onSend(message, 0, plugin);
               }}
-              onRegenerate={() => {
+              onRegenerate={(plugin) => {
                 if (currentMessage) {
-                  onSend(currentMessage, 2, null);
+                  onSend(currentMessage, 2, plugin);
                 }
               }}
             />
