@@ -9,7 +9,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const userMessage = messages[messages.length - 1];
 
     try {
-      const billed = await billUsage(lnbitsKey, 500, 'image-generation')
+      const billed = await billUsage(lnbitsKey, 1000, 'image-generation')
     } catch(e: any) {
       console.warn('OUTPUT BILLING ERROR', e.message)
     }
