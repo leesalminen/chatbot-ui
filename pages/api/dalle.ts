@@ -32,7 +32,7 @@ const handler = async (req: NextApiRequest, res: NextApiResponse<any>) => {
     const { data } = await answerRes.json();
     let answer = ''
 
-    data.forEach((obj, index) => {
+    data.forEach((obj: any, index: number) => {
       const num = index + 1
       answer += `Image ${num}\n[![Image ${num}](${obj.url} "Image ${num}")](${obj.url})\n\n`
     })
