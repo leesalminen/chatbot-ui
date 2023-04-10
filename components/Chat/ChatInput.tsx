@@ -1,10 +1,11 @@
 import { Message } from '@/types/chat';
 import { OpenAIModel } from '@/types/openai';
-import { Plugin } from '@/types/plugin';
+import { Plugin, PluginID } from '@/types/plugin';
 import { Prompt } from '@/types/prompt';
 import {
   IconBolt,
   IconBrandGoogle,
+  IconPhoto,
   IconPlayerStop,
   IconRepeat,
   IconSend,
@@ -278,7 +279,7 @@ export const ChatInput: FC<Props> = ({
             onClick={() => setShowPluginSelect(!showPluginSelect)}
             onKeyDown={(e) => {}}
           >
-            {plugin ? <IconBrandGoogle size={20} /> : <IconBolt size={20} />}
+            {plugin && plugin.id === PluginID.GOOGLE_SEARCH ? <IconBrandGoogle size={20} /> : plugin && plugin.id === PluginID.DALL_E_GENERATION ? <IconPhoto size={20} /> : <IconBolt size={20} />}
           </button>
 
           {showPluginSelect && (

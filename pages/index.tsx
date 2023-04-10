@@ -14,7 +14,7 @@ import {
   OpenAIModels,
   fallbackModelID,
 } from '@/types/openai';
-import { Plugin, PluginKey } from '@/types/plugin';
+import { Plugin, PluginKey, PluginID } from '@/types/plugin';
 import { Prompt } from '@/types/prompt';
 import { getEndpoint } from '@/utils/app/api';
 import {
@@ -266,9 +266,44 @@ const Home: React.FC<HomeProps> = ({
         saveConversations(updatedConversations);
 
         setMessageIsStreaming(false);
-      } else {
+      } else if(plugin.id === PluginID.GOOGLE_SEARCH) {
         const { answer } = await response.json();
 
+        const updatedMessages: Message[] = [
+          ...updatedConversation.messages,
+          { role: 'assistant', content: answer },
+        ];
+
+        updatedConversation = {
+          ...updatedConversation,
+          messages: updatedMessages,
+        };
+
+        setSelectedConversation(updatedConversation);
+        saveConversation(updatedConversation);
+
+        const updatedConversations: Conversation[] = conversations.map(
+          (conversation) => {
+            if (conversation.id === selectedConversation.id) {
+              return updatedConversation;
+            }
+
+            return conversation;
+          },
+        );
+
+        if (updatedConversations.length === 0) {
+          updatedConversations.push(updatedConversation);
+        }
+
+        setConversations(updatedConversations);
+        saveConversations(updatedConversations);
+
+        setLoading(false);
+        setMessageIsStreaming(false);
+      } else if (plugin.id === PluginID.DALL_E_GENERATION) {
+        const { answer } = await response.json();
+        console.log(answer)
         const updatedMessages: Message[] = [
           ...updatedConversation.messages,
           { role: 'assistant', content: answer },
